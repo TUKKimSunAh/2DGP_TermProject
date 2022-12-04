@@ -24,5 +24,5 @@ class Long_Block:
 
         self.image.draw(sx, sy)
 
-    def handle_collision(self, other, group):
+    def handle_collision(self, other, group, width, height):
         pass

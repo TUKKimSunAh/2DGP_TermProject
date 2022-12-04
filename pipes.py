@@ -2,15 +2,15 @@ from pico2d import *
 import game_world
 import server
 
-class Brick:
+class Pipes:
     image = None
 
     def __init__(self, x, y):
-        self.width, self.height = 30, 30
+        self.width, self.height = 0, 0
         self.x, self.y = x, y
 
     def get_bb(self):
-        return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+        return self.x - self.width/2, self.y - self.height/2, self.x + self.width/2, self.y + self.height/2
 
     def update(self):
         if self.x < 0 or self.x > 4000:
@@ -19,30 +19,29 @@ class Brick:
 
     def draw(self):
         sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
-
         self.image.draw(sx, sy)
 
     def handle_collision(self, other, group, width, height):
         pass
 
 
-class Normalbrick(Brick):
+class Bigpipe(Pipes):
     def __init__(self, x, y):
         super().__init__(x, y)
-        if Normalbrick.image == None:
-            Normalbrick.image = load_image('Bricks.png')
+        if Bigpipe.image == None:
+            Bigpipe.image = load_image('Pipe3.png')
+        self.width, self.height = 52, 104
 
-
-class Stairbrick(Brick):
+class Middlepipe(Pipes):
     def __init__(self, x, y):
         super().__init__(x, y)
-        if Stairbrick.image == None:
-            Stairbrick.image = load_image('Iron.png')
+        if Middlepipe.image == None:
+            Middlepipe.image = load_image('Pipe1.png')
+        self.width, self.height = 44, 66
 
-
-class Bonusmapbrick(Brick):
+class Smallpipe(Pipes):
     def __init__(self, x, y):
         super().__init__(x, y)
-        if Bonusmapbrick.image == None:
-            Bonusmapbrick.image = load_image('Bonus_Brick.png')
-
+        if Smallpipe.image == None:
+            Smallpipe.image = load_image('Pipe2.png')
+        self.width, self.height = 40, 42
