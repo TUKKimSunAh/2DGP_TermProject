@@ -10,6 +10,9 @@ class Questbox:
         self.width, self.height = 30, 30
         self.state = 'UnDie'
         self.x, self.y = x, y
+        self.breakcount = 0
+        self.questboxhit = load_music("./sound/block.mp3")
+        self.questboxhit.set_volume(32)
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
@@ -41,7 +44,6 @@ class Itembox(Questbox):
         super().__init__(x, y)
         if Itembox.image == None:
             Itembox.image = load_image("./resource/box/QBox2.png")
-            self.breakcount = 0
 
     def update(self):
         super().update()
@@ -65,8 +67,3 @@ class Monsterbox(Questbox):
             Monsterbox.image = load_image("./resource/box/QBox3.png")
 
 
-class Diebox(Questbox):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-        if Diebox.image == None:
-            Diebox.image = load_image("./resource/box/QBox_Die.png")

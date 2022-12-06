@@ -31,15 +31,21 @@ class Coin(Item):
         if Coin.image == None:
             Coin.image = load_image("./resource/item/Coin.png")
         self.width, self.height = 17, 30
+        self.coin_eat = load_music("./sound/coin.mp3")
+        self.coin_eat.set_volume(32)
         self.state = None
         self.frame = 0
         self.hit_cnt = 0
+
 
     def get_hitcnt(self):
         return self.hit_cnt
 
     def set_hitcnt(self, hitcnt):
         self.hit_cnt = hitcnt
+
+    def get_state(self):
+        return self.state
 
     def set_state(self, state):
         self.state = state
@@ -56,32 +62,61 @@ class Coin(Item):
         self.image.clip_draw(self.frame * 17, 0, 17, 30, sx, sy)
 
 
-
     def handle_collision(self, other, group, width, height):
-        if self.state == 'Hit' and group == 'mario:coin':
-            self.y = self.y + 30
-            self.hit_cnt += 1
+        if group == 'mario:coin':
+            if other.get_coinboxstate() == 'Hit':
+                self.y = self.y + 30
 
-            if self.hit_cnt == 2:
+            if other.get_coinboxstate() == 'CoinUp':
                 other.set_score(50)
+                self.coin_eat.play(1)
                 game_world.remove_object(self)
+                other.set_coinboxstate(None)
+
 
 class Flag(Item):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Flag.image == None:
             Flag.image = load_image("./resource/item/Flag.png")
+
+        self.flagup = load_music("./sound/flagpole.mp3")
+        self.flagup.set_volume(32)
         self.width = 26
         self.height = 26
 
-
     def up(self):
         if self.y < 300:
-            self.y += 5
+            self.y += 3
+            delay(0.3)
 
     def handle_collision(self, other, group, width, height):
         if group == 'mario:flag':
+            self.flagup.play(1)
+            other.stageclear.play(1)
             self.up()
+
+
+class Mushroom(Item):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        if Mushroom.image == None:
+            Mushroom.image = load_image("./resource/item/Mushroom.png")
+        self.flagup = load_music("./sound/flagpole.mp3")
+        self.flagup.set_volume(32)
+        self.width = 30
+        self.height = 30
+
+    def handle_collision(self, other, group, width, height):
+        if group == 'mario:mushroom':
+            if other.get_coinboxstate == 'Hit':
+                self.y = self.y + 30
+
+
+            if other.get_coinboxstate == 'MushroomUp':
+                game_world.remove_object(self)
+                other.set_score(200)
+                other.set_coinboxstate(None)
 
 
 

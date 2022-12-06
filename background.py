@@ -33,3 +33,7 @@ class Stage1(Background):
         self.canvas_height = 600
         self.width = 4000
         self.height = 600
+
+        self.bgm = load_music("./sound/stage1.mp3")
+        self.bgm.set_volume(32)
+        self.bgm.play(10)

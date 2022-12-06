@@ -14,7 +14,6 @@ check_move = 0
 check_jump = 1
 
 hitcount = 0
-qbox_state = None
 
 class Mario:
     bg: object
@@ -26,10 +25,21 @@ class Mario:
         self.state = 'Undie'
         self.x, self.y = 20, 300
         self.width, self.height = 26, 26
-        self.speed = 0.9
+        self.speed = 1
         self.frame = 0
         self.force = 0
         self.gravity = 0.1
+
+        self.jump = load_music("./sound/small-jump.mp3")
+        self.jump.set_volume(32)
+        self.clearstaage = load_music("./sound/level-clear.mp3")
+        self.clearstaage.set_volume(32)
+        self.gameover = load_music("./sound/game-over.mp3")
+        self.gameover.set_volume(32)
+
+        self.coinboxstate = None
+        self.itemboxstate = None
+        self.turtlehit = 0
 
         self.score = 0
         self.font = load_font('Super Mario Bros. 2.TTF', 16)
@@ -42,7 +52,15 @@ class Mario:
         self.x = clamp(0, self.x, server.background.width - 1)
         self.y = clamp(0, self.y, server.background.height - 1)
 
+        if self.y < 20 or self.score < 0:
+            self.state = 'Die'
+            self.x = self.x - 3
+            self.y = self.y + 20
+            delay(0.01)
+
         if self.state == 'Die':
+            self.image = load_image("./resource/mario/Mario_Dead.png")
+            self.gameover.play(1)
             self.gravity = 0
             self.y += 3
             if self.y > 300:
@@ -59,10 +77,6 @@ class Mario:
             self.frame = (self.frame + 1) % 3
             self.x = self.x - self.speed
 
-        if self.y < 20 or self.score < 0:
-            self.state = 'Die'
-            self.x = self.x - 3
-            self.y = self.y + 10
 
     def draw(self):
         sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
@@ -133,6 +147,24 @@ class Mario:
     def get_mariostate(self):
         return self.state
 
+    def get_coinboxstate(self):
+        return self.coinboxstate
+
+    def set_itemboxstate(self, state):
+        self.itemboxstate = state
+
+    def get_itemboxstate(self):
+        return self.itemboxstate
+
+    def set_coinboxstate(self, state):
+        self.coinboxstate = state
+
+    def get_turtlehit(self):
+        return self.turtlehit
+
+    def set_turtlehit(self, hit):
+        self.turtlehit = hit
+
     def handle_events(self, event):
         global check_direction, check_move, check_jump
 
@@ -150,6 +182,7 @@ class Mario:
                 check_move = -1
 
             if event.key == SDLK_SPACE:
+                self.jump.play(1)
                 if check_direction == 1:
                     check_jump = 1
                 elif check_direction == -1:
@@ -169,7 +202,7 @@ class Mario:
 
 
     def handle_collision(self, other, group, width, height):
-        global hitcount, qbox_state
+        global hitcount
 
         if group == 'mario:ground':
             self.y = other.y + other.height / 2 + self.height / 2
@@ -197,13 +230,8 @@ class Mario:
                         self.go_event = None
 
         if group == 'mario:goomba':
-            time_cnt = 0
             if width < height:
                 self.score -= 50
-                if self.score < 0:
-                    self.score = 0
-                    self.image = load_image("./resource/mario/Mario_Dead.png")
-                    self.state = 'Die'
 
             else:
                 if self.y < other.y:
@@ -214,16 +242,20 @@ class Mario:
                     self.score += 100
                     game_world.remove_object(other)
 
+
         if group == 'mario:qbox1':
             if self.y < other.y:
                 self.y = other.y - other.height / 2 - self.height / 2
                 self.force = 0
                 other.image = load_image("./resource/box/QBox_Die.png")
-                qbox_state = 'Hit'
+                self.coinboxstate = 'Hit'
+                self.questboxhit = load_music("./sound/block.mp3")
+                self.questboxhit.play(1)
 
             else:
                 self.y = other.y + other.height / 2 + self.height / 2
                 self.force = 0
+
 
         if group == 'mario:qbox2':
             if self.y < other.y:
@@ -234,10 +266,31 @@ class Mario:
                     other.image = load_image("./resource/box/QBox1.png")
                 if hitcount == 2:
                     other.image = load_image("./resource/box/QBox_Die.png")
+                    self.itemboxstate = 'Hit'
+                self.questboxhit.play(1)
 
             else:
                 self.y = other.y + other.height / 2 + self.height / 2
                 self.force = 0
 
         if group == 'mario:coin':
-            other.set_state(qbox_state)
+            print(self.coinboxstate)
+            if self.coinboxstate == 'Hit':
+                self.coinboxstate = 'CoinUp'
+
+        if group == 'mario:turtle':
+            if self.y > other.y:
+                self.turtlehit += 1
+                print(self.turtlehit)
+                if self.turtlehit == 2:
+                    other.image = load_image("./resource/item/Turtle_Die.png")
+                    other.speed = 3
+
+            else:
+                self.score -= 100
+
+            if self.turtlehit > 10:
+                self.score += 200
+                game_world.remove_object(other)
+                self.turtlehit = 0
+

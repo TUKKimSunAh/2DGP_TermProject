@@ -8,7 +8,7 @@ logo_time = 0.0
 
 def enter():
     global image
-    image = load_image('logo.png')
+    image = load_image("./resource/background/logo.png")
     pass
 
 def exit():

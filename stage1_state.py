@@ -4,7 +4,7 @@ import time
 
 from background import Stage1
 from mario import Mario
-#from items import Flag
+from item import Flag
 from long_block import Long_Block
 from brick import Normalbrick
 from brick import Stairbrick
@@ -12,8 +12,8 @@ from questbox import Coinbox
 from questbox import Itembox
 from pipes import Bigpipe
 from pipes import Middlepipe
-#from monster import Goomba
-#from monster import Turtle
+from monster import Goomba
+from monster import Turtle
 from item import Coin
 
 
@@ -25,18 +25,21 @@ import manual_state
 
 
 def enter():
+
     server.background = Stage1()
     game_world.add_object(server.background, 0)
+    server.background.bgm.play(10)
 
     server.mario = Mario()
     game_world.add_object(server.mario, 1)
 
-    middelepipe_list = [Middlepipe(550, 110), Middlepipe(780, 122), Bigpipe(2360, 141), Middlepipe(2826, 122),
-                        Middlepipe(3400, 122), Middlepipe(3600, 110)]
+    middelepipe_list = [Middlepipe(450, 110), Middlepipe(770, 110), Middlepipe(920, 122),
+                        Bigpipe(2360, 141), Middlepipe(2826, 122), Middlepipe(1800, 122),
+                        Middlepipe(3400, 122), Middlepipe(3620, 110)]
     game_world.add_objects(middelepipe_list, 3)
     game_world.add_collision_pairs(server.mario, middelepipe_list, 'mario:middlepipe')
 
-    bigpipe_list = [Bigpipe(1014, 141)]
+    bigpipe_list = [Bigpipe(1100, 141)]
     game_world.add_objects(bigpipe_list, 4)
     game_world.add_collision_pairs(server.mario, bigpipe_list, 'mario:bigpipe')
 
@@ -47,25 +50,25 @@ def enter():
 
     brick_list = [Normalbrick(180, 170), Normalbrick(240, 170), Normalbrick(300, 170), Normalbrick(1620, 170),
                   Normalbrick(1680, 170),
-                  Normalbrick(1722, 300), Normalbrick(1752, 300), Normalbrick(1782, 300), Normalbrick(1812, 300),
-                  Normalbrick(1842, 300), Normalbrick(1872, 300), Normalbrick(1902, 300),
-                  Normalbrick(1932, 300), Normalbrick(1820, 450), Normalbrick(1850, 450), Normalbrick(1880, 450),
-                  Normalbrick(2950, 260), Normalbrick(2980, 260), Normalbrick(3010, 260),
-                  Normalbrick(3070, 340), Normalbrick(3100, 340), Normalbrick(3130, 340),
-                  Normalbrick(3190, 420), Normalbrick(3220, 420), Normalbrick(3250, 420)]
+                  Normalbrick(1722, 280), Normalbrick(1752, 280), Normalbrick(1782, 280), Normalbrick(1812, 280),
+                  Normalbrick(1842, 280), Normalbrick(1872, 280), Normalbrick(1902, 280), Normalbrick(1932, 280),
+                  Normalbrick(1790, 430), Normalbrick(1820, 430), Normalbrick(1850, 430),
+                  Normalbrick(2890, 240), Normalbrick(2920, 240), Normalbrick(2950, 240),
+                  Normalbrick(3010, 320), Normalbrick(3040, 320), Normalbrick(3070, 320),
+                  Normalbrick(3130, 400), Normalbrick(3160, 400), Normalbrick(3190, 400)]
     game_world.add_objects(brick_list, 6)
     game_world.add_collision_pairs(server.mario, brick_list, 'mario:brick')
 
-    coin_list = [Coin(210, 169), Coin(270, 169), Coin(1650, 169), Coin(1710, 169)]
+    coin_list = [Coin(210, 169), Coin(270, 169), Coin(1560, 170), Coin(1650, 169), Coin(1710, 169)]
     game_world.add_objects(coin_list, 7)
     game_world.add_collision_pairs(server.mario, coin_list, 'mario:coin')
 
     coinbox_list = [Coinbox(210, 170), Coinbox(270, 170),
-                    Coinbox(1650, 170), Coinbox(1710, 170)]
+                    Coinbox(1560, 170), Coinbox(1650, 170), Coinbox(1710, 170)]
     game_world.add_objects(coinbox_list, 11)
     game_world.add_collision_pairs(server.mario, coinbox_list, 'mario:qbox1')
 
-    itembox_list = [Itembox(1790, 450)]
+    itembox_list = [Itembox(1760, 430)]
     game_world.add_objects(itembox_list, 8)
     game_world.add_collision_pairs(server.mario, itembox_list, 'mario:qbox2')
 
@@ -90,8 +93,28 @@ def enter():
     game_world.add_objects(stairlist_list, 9)
     game_world.add_collision_pairs(server.mario, stairlist_list, 'mario:brick')
 
+    goomba_list = [Goomba(300, 300), Goomba(370, 300), Goomba(2100, 500), Goomba(2132, 500), Goomba(2669, 500),
+                   Goomba(2887, 400), Goomba(3100, 500), Goomba(3090, 500)]
+    game_world.add_objects(goomba_list, 10)
+    game_world.add_collision_pairs(server.mario, goomba_list, 'mario:goomba')
+    game_world.add_collision_pairs(goomba_list, long_list, 'goomba:ground')
+    game_world.add_collision_pairs(goomba_list, bigpipe_list, 'goomba:bigpipe')
+    game_world.add_collision_pairs(goomba_list, middelepipe_list, 'goomba:middlepipe')
+    game_world.add_collision_pairs(goomba_list, stairlist_list, 'goomba:stair')
+    game_world.add_collision_pairs(goomba_list, brick_list, 'goomba:brick')
 
+    flag = [Flag(3750, 140)]
+    game_world.add_objects(flag, 11)
+    game_world.add_collision_pairs(server.mario, flag, 'mario:flag')
 
+    turtle_list = [Turtle(460, 300), Turtle(1820, 6500), Turtle(1850, 6500), Turtle(3156, 550), Turtle(3528, 550)]
+    game_world.add_objects(turtle_list, 12)
+    game_world.add_collision_pairs(server.mario, turtle_list, 'mario:turtle')
+    game_world.add_collision_pairs(turtle_list, long_list, 'turtle:ground')
+    game_world.add_collision_pairs(turtle_list, bigpipe_list, 'turtle:bigpipe')
+    game_world.add_collision_pairs(turtle_list, middelepipe_list, 'turtle:middlepipe')
+    game_world.add_collision_pairs(turtle_list, stairlist_list, 'turtle:stair')
+    game_world.add_collision_pairs(turtle_list, brick_list, 'turtle:brick')
 
 
 def exit():
@@ -151,13 +174,18 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
+    if server.mario.get_mariostate() == 'Unshow':
+        time.sleep(0.3)
+        game_framework.change_state(title_state)
+
+    server.background.set_score(server.mario.get_score())
+
     for a, b, group in game_world.all_collision_pairs():
         hit_judge, interval_width, interval_height = Check_Collision_Rect(a, b)
 
         if 'Hit' == hit_judge:
             a.handle_collision(b, group, interval_width, interval_height)
             b.handle_collision(a, group, interval_width, interval_height)
-
 
 
 def draw():
