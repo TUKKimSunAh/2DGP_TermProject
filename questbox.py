@@ -30,7 +30,7 @@ class Coinbox(Questbox):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Coinbox.image == None:
-            Coinbox.image = load_image('QBox1.png')
+            Coinbox.image = load_image("./resource/box/QBox1.png")
 
     def handle_collision(self, other, group, width, height):
         pass
@@ -40,15 +40,15 @@ class Itembox(Questbox):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Itembox.image == None:
-            Itembox.image = load_image('QBox2.png')
+            Itembox.image = load_image("./resource/box/QBox2.png")
             self.breakcount = 0
 
     def update(self):
         super().update()
         if self.breakcount == 1:
-            Itembox.image = load_image('QBox1.png')
+            Itembox.image = load_image("./resource/box/QBox1.png")
         if self.breakcount == 2:
-            Itembox.image = load_image('QBox_Die.png')
+            Itembox.image = load_image("./resource/box/QBox_Die.png")
 
     def handle_collision(self, other, group, width, height):
         if group == 'mario:qbox2':
@@ -62,11 +62,11 @@ class Monsterbox(Questbox):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Monsterbox.image == None:
-            Monsterbox.image = load_image('QBox3.png')
+            Monsterbox.image = load_image("./resource/box/QBox3.png")
 
 
 class Diebox(Questbox):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Diebox.image == None:
-            Diebox.image = load_image('QBox_Die.png')
+            Diebox.image = load_image("./resource/box/QBox_Die.png")

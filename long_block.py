@@ -7,7 +7,7 @@ class Long_Block:
 
     def __init__(self, x, y):
         if Long_Block.image == None:
-            Long_Block.image = load_image('Long_Block.png')
+            Long_Block.image = load_image("./resource/bricks/Long_Block.png")
         self.width, self.height = 762, 90
         self.x, self.y = x, y
 

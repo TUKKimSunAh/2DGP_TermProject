@@ -29,19 +29,19 @@ class Bigpipe(Pipes):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Bigpipe.image == None:
-            Bigpipe.image = load_image('Pipe3.png')
+            Bigpipe.image = load_image("./resource/item/Pipe3.png")
         self.width, self.height = 52, 104
 
 class Middlepipe(Pipes):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Middlepipe.image == None:
-            Middlepipe.image = load_image('Pipe1.png')
+            Middlepipe.image = load_image("./resource/item/Pipe1.png")
         self.width, self.height = 44, 66
 
 class Smallpipe(Pipes):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Smallpipe.image == None:
-            Smallpipe.image = load_image('Pipe2.png')
+            Smallpipe.image = load_image("./resource/item/Pipe2.png")
         self.width, self.height = 40, 42

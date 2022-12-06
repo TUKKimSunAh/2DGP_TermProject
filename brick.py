@@ -30,19 +30,19 @@ class Normalbrick(Brick):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Normalbrick.image == None:
-            Normalbrick.image = load_image('Bricks.png')
+            Normalbrick.image = load_image("./resource/bricks/Bricks.png")
 
 
 class Stairbrick(Brick):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Stairbrick.image == None:
-            Stairbrick.image = load_image('Iron.png')
+            Stairbrick.image = load_image("./resource/bricks/Iron.png")
 
 
 class Bonusmapbrick(Brick):
     def __init__(self, x, y):
         super().__init__(x, y)
         if Bonusmapbrick.image == None:
-            Bonusmapbrick.image = load_image('Bonus_Brick.png')
+            Bonusmapbrick.image = load_image("./resource/bricks/Bonus_Brick.png")
 
